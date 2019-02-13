@@ -109,6 +109,12 @@ resetButton.addEventListener("click", function(){
 			td[i].classList.remove('purple' + hover)
 	}
 
+	// Clears the board of any pieces 
+	for(var i = 0;i < td.length;i++)
+		if(!td[i].classList.contains(""))
+			if(td[i].style.background != "white")
+				td[i].style.background = "white"
+				
 	resetButton.style.visibility = "hidden"
 })
 

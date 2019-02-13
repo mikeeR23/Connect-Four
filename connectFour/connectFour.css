@@ -104,19 +104,19 @@ td{
 }
 
 .redHover:hover{
-	background-color:red;
+	background-color:rgb(168, 38, 38);
 }
 
 .blueHover:hover{
-	background-color: blue;
+	background-color: rgb(80, 80, 187);
 }
 
 .yellowHover:hover{
-	background-color: yellow;
+	background-color: rgb(230, 230, 89);
 }
 
 .purpleHover:hover{
-	background-color: purple;
+	background-color: rgb(196, 88, 196);
 }
 
 .redActive{
