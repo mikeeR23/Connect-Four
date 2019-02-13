@@ -4,6 +4,8 @@ var colors = ["red", "blue", "yellow", "purple"];
 var playerColor = ''
 var enemyColor = ''
 
+var playerTurn = 1 // User's turn is defined by 1, the computer by 0
+
 var displayColor = document.querySelector('#displayColor')
 var displayMessage  = document.querySelector('#displayMessage')
 var table = document.querySelector('#table')
@@ -53,8 +55,33 @@ function setResetButton()
 // Adds event listeners for all td elements in table
 // When user clicks on the td element the background color changes to the players color choice
 document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListener("click", function(){
-	e.style.backgroundColor = playerColor
+
+	if(e.style.backgroundColor == playerColor || e.style.backgroundColor == enemyColor)
+		displayMessage.innerHTML = "That spot has already been choosen, please choose another spot"
+	else
+	{
+		displayMessage.innerHTML = ""
+		e.style.backgroundColor = playerColor
+		playerTurn = 0
+
+		calculateComputerMove()
+	}
 }))
+
+function calculateComputerMove()
+{
+	
+	var num = Math.floor(Math.random() * td.length)
+	console.log("Initiall number is " + num)
+	if(td[num].style.backgroundColor != '')
+	{
+		while(td[num].style.backgroundColor != '')
+			num = Math.floor((Math.random() * td.length))
+	}
+
+	td[num].style.backgroundColor = enemyColor
+	console.log("Placed on " + num)
+}
 
 document.querySelector('#red').addEventListener("click", function(){
 	setPlayerColor("red")
@@ -114,7 +141,7 @@ resetButton.addEventListener("click", function(){
 		if(!td[i].classList.contains(""))
 			if(td[i].style.background != "white")
 				td[i].style.background = "white"
-				
+
 	resetButton.style.visibility = "hidden"
 })
 
