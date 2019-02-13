@@ -7,9 +7,21 @@
 	text-align: center;
 }
 
-h1, h2{
+h1{
 	text-align: center;
 	font-weight: bold;
+	font-size:50px;
+	color:blue;
+	letter-spacing:2px;
+	text-shadow:4px 4px 4px #aaa;
+	font-family: 'Ubuntu', sans-serif, 'Roboto Mono', monospace, 'Open Sans', sans-serif;
+}
+
+h2{
+	font-size:35px;
+	margin-top:15px;
+	text-shadow:4px 4px 4px #aaa;
+	font-family: 'Ubuntu', sans-serif, 'Roboto Mono', monospace, 'Open Sans', sans-serif;
 }
 
 #colors1{
@@ -109,6 +121,18 @@ td{
 
 .redActive{
 	background-color: red;
+}
+
+#resetGame{
+	margin: 0 auto;
+	margin-top:20px;
+	font-size:20px;
+	height:50px;
+	width: 150px;
+	border-radius:75px;
+	color:white;
+	background-color:black;
+	border:none;
 }
 
 
