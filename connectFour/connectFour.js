@@ -15,9 +15,9 @@ var playerTurn = 1 // User's turn is defined by 1, the computer by 0
 var displayColor = document.querySelector('#displayColor')
 var displayMessage  = document.querySelector('#displayMessage')
 var table = document.querySelector('#table')
-var td = document.getElementsByTagName('td')
+//var td = document.getElementsByTagName('td')
+var td = document.querySelectorAll('#myTable tbody tr td')
 var resetButton = document.querySelector('#resetGame')
-
 
 
 
@@ -84,58 +84,64 @@ function calculateComputerMove()
 	computerBoolArray[num] = true // Show that the enemy is occupying this spot
 }
 
-function checkUserWinCondition()
+// Checks to see if the user has 4 in a row horizontally
+function horizontalWinCondition() 
 {
-	var cnt = 0 // keep track of how many in a row
 	var j = 0
-	var computerCount = 0
-	var checkHorizontal = new Array(6)
+	var cnt = 0
 
 	for(var i = 0;i < td.length;i++)
 	{
-		console.log("Td[" + i + "] = " +userBoolArray[i])
-	}
-
-	for(var i = 0;i < checkHorizontal.length;i++) // Horizontal array used to check for 4 in a row horizontal
-		checkHorizontal[i] = false
-
-	for(var i = 0;i < td.length;i++)
-	{
-		if(userBoolArray[i] && cnt == 0) // first node user has placed 
+		if(td[i].style.backgroundColor == playerColor)
 		{
-			console.log("Ok starting horizontal check at td[" + i + "]")
-			cnt++
-			checkHorizontal[0] = true
-
-			if(i % 7 > 3)
+			var j = i
+			while(td[j].style.backgroundColor == playerColor)
 			{
-				console.log("i is too big")
-				cnt-- // reset back to 0
-				continue
-			}
-			else
-			{
-				console.log("in the right spoot boi")
-				j = i + 1
-				// until we reach a computer node, an unoccupied node, or end of row
-				while(j % 7 != 6 || !userBoolArray[j] || computerBoolArray[j])
-				{
-					if(userBoolArray[j])
-						cnt++
-					
-					j++
-				} 
-
-				if(cnt == 4) // 4 in a row horizontal
-				{
-					console.log("returning true")
-					return true
-				}
-					
-			}
+				console.log("Background color: " + td[j].style.backgroundColor)
+				cnt++
+				j++
+			}	
 		}
-
+		if(cnt == 4)
+				return true	
+		
+		cnt = 0
 	}
+
+	return false
+}
+
+// Bug that shows win condition choosing 4 in a row from 2 rows 
+// Checks to see if the computer has 4 in a row horizontally
+function computerHorizontalWinCondition()
+{
+	var j = 0
+	var cnt = 0
+
+	for(var i = 0;i < td.length;i++)
+	{
+		if(td[i].style.backgroundColor == enemyColor)
+		{
+			var j = i
+			while(td[j].style.backgroundColor == enemyColor)
+			{
+				cnt++
+				j++
+			}	
+		}
+		if(cnt == 4)
+				return true	
+		
+		cnt = 0
+	}
+
+	return false
+}
+
+// Checks for vertical win condition
+function vertalWinCondition(color)
+{
+
 }
 
 // Adds event listeners for all td elements in table
@@ -150,20 +156,25 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 	{
 		displayMessage.innerHTML = ""
 		e.style.backgroundColor = playerColor
-		userBoolArray[e] = true // User's color is in this spot
 		playerTurn = 0
 
-		var win = checkUserWinCondition()
+		var winUser = checkUserWinCondition()
 
-		if(win)
-			alert("we fucking did it boy")
+		if(winUser)
+			alert("You won")
 		else
-			console.log("fuck me sideways")
-		calculateComputerMove()
+			console.log("No win condition")
 		
-	}
+		
+		calculateComputerMove()
 
-	//checkComputerWinCondition() // Checks to see if the computer got 4 in a row
+		var winComputer = computerHorizontalWinCondition()
+
+		if(winComputer)
+			alert("The computer has won")
+		else	
+			console.log("No computer win condition")
+	}
 }))
 
 
