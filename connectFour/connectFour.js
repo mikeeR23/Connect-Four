@@ -156,9 +156,9 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 		var win = checkUserWinCondition()
 
 		if(win)
-			alert("we fucking did it boy")
+			alert("you won")
 		else
-			console.log("fuck me sideways")
+			console.log("No win condition")
 		calculateComputerMove()
 		
 	}
