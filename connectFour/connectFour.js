@@ -160,6 +160,7 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 
 		var winUser = checkUserWinCondition()
 
+
 		if(winUser)
 			alert("You won")
 		else
