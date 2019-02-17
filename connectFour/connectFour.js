@@ -165,37 +165,30 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 	}
 }))
 
-
-document.querySelector('#red').addEventListener("click", function(){
-	setPlayerColor("red")
+function callFunctions(colorClicked)
+{
+	setPlayerColor(colorClicked)
 	printText()
 	setEnemy()
 	removeColors()
 	setResetButton()
+}
+
+
+document.querySelector('#red').addEventListener("click", function(){
+	callFunctions("red")
 })
 
 document.querySelector('#blue').addEventListener("click", function(){
-	setPlayerColor("blue")
-	printText()
-	setEnemy()
-	removeColors()
-	setResetButton()
+	callFunctions("blue")
 })
 
 document.querySelector('#yellow').addEventListener("click", function(){
-	setPlayerColor("yellow")
-	printText()
-	setEnemy()
-	removeColors()
-	setResetButton()
+	callFunctions("yellow")
 })
 
 document.querySelector('#purple').addEventListener("click", function(){
-	setPlayerColor("purple")
-	printText()
-	setEnemy()
-	removeColors()
-	setResetButton()
+	callFunctions("purple")
 })
 
 resetButton.addEventListener("click", function(){
