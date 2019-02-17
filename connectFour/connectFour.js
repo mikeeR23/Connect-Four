@@ -2,15 +2,8 @@
 
 var colors = ["red", "blue", "yellow", "purple"];
 
-var userBoolArray = new Array(42)
-var computerBoolArray = new Array(42)
-initializeArray()
-
-
-var playerColor = ''
-var enemyColor = ''
-
-var playerTurn = 1 // User's turn is defined by 1, the computer by 0
+var playerColor = '' // Keeps track of the player's color
+var enemyColor = '' // Keeps track of the enemy's color
 
 var displayColor = document.querySelector('#displayColor')
 var displayMessage  = document.querySelector('#displayMessage')
@@ -20,16 +13,6 @@ var td = document.querySelectorAll('#myTable tbody tr td')
 var resetButton = document.querySelector('#resetGame')
 
 
-
-function initializeArray() // Create 2D array
-{
-	for(var i = 0;i < userBoolArray.length;i++)
-	{
-		userBoolArray[i] = false
-		computerBoolArray[i] = false
-	}
-}
-
 // Adds css class that shows the users color when hovering over td elements
 function addCssClass()
 {
@@ -37,19 +20,14 @@ function addCssClass()
 
 	cssClass = playerColor + 'Hover'
 
+	// Add the css class to all td elements
 	for(var i = 0;i < td.length;i++)
-	{
 		td[i].classList.add(cssClass)
-	}
-
 }
-
 
 // After choosing a color, print text 
 function printText()
 {
-	var cssClass = ''
-
 	displayColor.textContent = 'Your color is ' + playerColor
 	displayMessage.textContent = 'Place a node anywhere to start the game'
 
@@ -70,6 +48,7 @@ function setResetButton()
 	resetButton.style.display = "block"
 }
 
+// Randomly picks a node for computer
 function calculateComputerMove()
 {
 	var num = Math.floor(Math.random() * td.length) // Assign random td element number
@@ -81,67 +60,90 @@ function calculateComputerMove()
 	}
 
 	td[num].style.backgroundColor = enemyColor // Found an empty element 
-	computerBoolArray[num] = true // Show that the enemy is occupying this spot
 }
 
 // Checks to see if the user has 4 in a row horizontally
-function horizontalWinCondition() 
+// Bug: if I get the last 3 at the end of a row then the first one at the beginning
+// of the next row it will count that as 4 in a row
+function horizontalWinCondition(userColor) 
 {
 	var j = 0
 	var cnt = 0
 
-	for(var i = 0;i < td.length;i++)
+	for(var i = 0;i < td.length;i++) // Loop through td elements
 	{
-		if(td[i].style.backgroundColor == playerColor)
+		if(td[i].style.backgroundColor == userColor) // found an occupied node
 		{
 			var j = i
-			while(td[j].style.backgroundColor == playerColor)
+			while(td[j].style.backgroundColor == userColor) // check the following nodes to see if they are occupied
 			{
-				console.log("Background color: " + td[j].style.backgroundColor)
-				cnt++
-				j++
-			}	
+				cnt++ // update the total count
+				j++ // variable to check next node
+			}
 		}
-		if(cnt == 4)
+
+		if(cnt == 4) // return true if we get 4 in a row
 				return true	
 		
 		cnt = 0
 	}
 
-	return false
+	return false	// didn't get 4 in a row
 }
 
-// Bug that shows win condition choosing 4 in a row from 2 rows 
-// Checks to see if the computer has 4 in a row horizontally
-function computerHorizontalWinCondition()
-{
-	var j = 0
-	var cnt = 0
-
-	for(var i = 0;i < td.length;i++)
-	{
-		if(td[i].style.backgroundColor == enemyColor)
-		{
-			var j = i
-			while(td[j].style.backgroundColor == enemyColor)
-			{
-				cnt++
-				j++
-			}	
-		}
-		if(cnt == 4)
-				return true	
-		
-		cnt = 0
-	}
-
-	return false
-}
 
 // Checks for vertical win condition
-function vertalWinCondition(color)
+// Should be done -- still need to do some testing
+function vertalWinCondition(userColor)
+{
+	var cnt = 0 // Keep track of how many nodes in a row
+
+	for(var i = 0;i < td.length;i++)
+	{
+		if(td[i].style.backgroundColor == userColor && cnt == 0) // First instance of an occupied node
+		{
+			var modValue = i % 7	// gets the column 
+			cnt++
+		}
+		// Occupied node with same color in the same column following the first node
+		else if(td[i].style.backgroundColor == userColor && cnt > 0 && i % 7 == modValue) 
+		{
+			cnt++ 
+		}
+		// Either unoccupied node or computer node in the same column
+		else if(td[i].style.backgroundColor != userColor && i %7 == modValue)
+		{
+			cnt--
+		}
+		else	// keep checking
+			continue
+		
+		if(cnt == 4) // Found 4 nodes in a row
+			return true
+	}
+
+	return false	// Didn't find 4 in a row
+}
+
+// TODO
+function diagnalWinCondition()
 {
 
+}
+
+// Performs all checks for a win condition
+function doChecks()
+{
+	if(horizontalWinCondition(playerColor)) // Check if the player has 4 in a row horizontally
+		alert("Congrats, Horizontally, you have won")
+	else if(vertalWinCondition(playerColor))
+		alert("Congrats, Vertically, you have won!")
+	else if(horizontalWinCondition(enemyColor)) // Check if the computer has 4 in a row horizontally
+		alert("Computer has won, proceed with world domination, horizontally..")
+	else if(vertalWinCondition(enemyColor))
+		alert("Computer has won, proceed with world domination, vertically...")
+	else	// Nobody has 4 in a row horizontally
+		console.log("Keep going, nobody has satisfied horizontal win condition")
 }
 
 // Adds event listeners for all td elements in table
@@ -156,25 +158,10 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 	{
 		displayMessage.innerHTML = ""
 		e.style.backgroundColor = playerColor
-		playerTurn = 0
-
-		var winUser = checkUserWinCondition()
-
-
-		if(winUser)
-			alert("You won")
-		else
-			console.log("No win condition")
-		
 		
 		calculateComputerMove()
 
-		var winComputer = computerHorizontalWinCondition()
-
-		if(winComputer)
-			alert("The computer has won")
-		else	
-			console.log("No computer win condition")
+		doChecks()
 	}
 }))
 
@@ -251,24 +238,5 @@ function setEnemy()
 			enemyColor  = colors[Math.floor(Math.random() * colors.length)];
 }
 
-function setPlayerColor(color)
-{
-	playerColor = color
-}
-
-function getPlayerColor()
-{
-	return playerColor
-}
-
-function setEnemyColor(color)
-{
-	enemyColor = color // Give enemy random color
-}
-
-function getEnemyColor()
-{
-	return enemyColor
-}
 
 
