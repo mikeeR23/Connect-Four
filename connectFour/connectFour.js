@@ -100,6 +100,9 @@ function vertalWinCondition(userColor)
 
 	for(var i = 0;i < td.length;i++)
 	{
+		if(cnt == 4) // Found 4 nodes in a row
+			return true
+
 		if(td[i].style.backgroundColor == userColor && cnt == 0) // First instance of an occupied node
 		{
 			var modValue = i % 7	// gets the column 
@@ -115,20 +118,59 @@ function vertalWinCondition(userColor)
 		{
 			cnt--
 		}
-		else	// keep checking
+		else	
 			continue
 		
-		if(cnt == 4) // Found 4 nodes in a row
-			return true
+		
 	}
 
 	return false	// Didn't find 4 in a row
 }
 
-// TODO
-function diagnalWinCondition()
+// Checks for right and left diagonals
+// TODO: check for left diagonal
+function diagonalWinCondition(userColor)
 {
+	var cnt = 0
+	var row = -1
 
+	// Determine a right diagonal
+	for(var i = 0;i < td.length;i++)
+	{
+		if(cnt == 4) // check for 4 in a row
+			return true
+
+		if(i % 7 == 0) // Get the row number 
+			row++
+
+		if(td[i].style.backgroundColor == userColor && cnt == 0) // Check for first instance of a node
+		{
+			var col = i % 7 // gets the column of the first node
+			var myCol = col + 1 // variable for checking following nodes are 1 column after 
+			var myRow = row + 1  // varibale for checking following nodes are in the next row
+			cnt++	// update node count
+		}
+		else if(td[i].style.backgroundColor == userColor && cnt > 0 && row == myRow) // node found in next row
+		{
+			if(i % 7 == myCol) // if the node is 1 column after the previous
+			{
+				cnt++
+				myCol++
+				myRow++
+			}
+		}
+		// checks to see if a node that should be next in the diagonal doesn't appear
+		else if(cnt > 0 && row == myRow && col == myCol)
+		{
+			if(td[i].style.backgroundColor != userColor)
+				cnt--
+		}
+		else 
+			continue
+	}
+
+
+	return false
 }
 
 // Performs all checks for a win condition
@@ -142,6 +184,10 @@ function doChecks()
 		alert("Computer has won, proceed with world domination, horizontally..")
 	else if(vertalWinCondition(enemyColor))
 		alert("Computer has won, proceed with world domination, vertically...")
+	else if(diagonalWinCondition(playerColor))
+		alert("Congrats, you have won diagonally")
+	else if(diagonalWinCondition(enemyColor))
+		alert("Computer has won, proceed with world domination, diagonally...")
 	else	// Nobody has 4 in a row horizontally
 		console.log("Keep going, nobody has satisfied horizontal win condition")
 }
@@ -196,6 +242,9 @@ resetButton.addEventListener("click", function(){
 	enemyColor = ''
 	var hover = 'Hover'
 
+	//displayColor.innerHTML = ''
+	//displayMessage.innerHTML = ''
+
 	// Show all the colors at top of page again
 	for(var i = 0;i < colors.length;i++)
 		document.getElementById(colors[i]).style.visibility = "visible"
@@ -210,13 +259,14 @@ resetButton.addEventListener("click", function(){
 			td[i].classList.remove('yellow' + hover)
 		if(td[i].classList.contains('purple' + hover))
 			td[i].classList.remove('purple' + hover)
+
 	}
 
 	// Clears the board of any pieces 
 	for(var i = 0;i < td.length;i++)
 		if(!td[i].classList.contains(""))
-			if(td[i].style.background != "white")
-				td[i].style.background = "white"
+			if(td[i].style.backgroundColor != "white")
+				td[i].style.backgroundColor = "white"
 
 	resetButton.style.visibility = "hidden"
 })
@@ -230,6 +280,12 @@ function setEnemy()
 		while(enemyColor == playerColor)
 			enemyColor  = colors[Math.floor(Math.random() * colors.length)];
 }
+
+function setPlayerColor(color)
+{
+	playerColor = color
+}
+
 
 
 
