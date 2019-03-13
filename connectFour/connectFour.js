@@ -53,9 +53,9 @@ function calculateComputerMove()
 {
 	var num = Math.floor(Math.random() * td.length) // Assign random td element number
 
-	if(td[num].style.backgroundColor != '') // Check if the spot is already filled
+	if(td[num].style.backgroundColor != 'white') // Check if the spot is already filled
 	{
-		while(td[num].style.backgroundColor != '') // Assign a different td element until it finds one that is empty
+		while(td[num].style.backgroundColor != 'white') // Assign a different td element until it finds one that is empty
 			num = Math.floor((Math.random() * td.length))
 	}
 
@@ -73,12 +73,14 @@ function horizontalWinCondition(userColor)
 	for(var i = 0;i < td.length;i++) // Loop through td elements
 	{
 		if(td[i].style.backgroundColor == userColor) // found an occupied node
-		{
+		{	
 			var j = i
 			while(td[j].style.backgroundColor == userColor) // check the following nodes to see if they are occupied
 			{
 				cnt++ // update the total count
 				j++ // variable to check next node
+				if(j > 41)
+					break
 			}
 		}
 
@@ -177,7 +179,10 @@ function diagonalWinCondition(userColor)
 function doChecks()
 {
 	if(horizontalWinCondition(playerColor)) // Check if the player has 4 in a row horizontally
+	{
 		alert("Congrats, Horizontally, you have won")
+		table.classList.toggle("lockElements")
+	}
 	else if(vertalWinCondition(playerColor))
 		alert("Congrats, Vertically, you have won!")
 	else if(horizontalWinCondition(enemyColor)) // Check if the computer has 4 in a row horizontally
@@ -196,7 +201,7 @@ function doChecks()
 // When user clicks on the td element the background color changes to the players color choice
 document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListener("click", function(){
 
-	if(e.style.backgroundColor == '' && playerColor == '')
+	if(e.style.backgroundColor == 'white' && playerColor == '')
 		displayMessage.innerHTML = "Choose a color to start the game"
 	else if(e.style.backgroundColor == playerColor || e.style.backgroundColor == enemyColor)
 		displayMessage.innerHTML = "That spot has already been choosen, please choose another spot"
@@ -211,8 +216,16 @@ document.querySelectorAll('#myTable tbody tr td').forEach(e => e.addEventListene
 	}
 }))
 
+function setBackground()
+{
+	for(var i = 0;i < td.length;i++)
+		td[i].style.backgroundColor = 'white'
+
+}
+
 function callFunctions(colorClicked)
 {
+	setBackground()
 	setPlayerColor(colorClicked)
 	printText()
 	setEnemy()
@@ -240,6 +253,8 @@ document.querySelector('#purple').addEventListener("click", function(){
 resetButton.addEventListener("click", function(){
 	playerColor = ''
 	enemyColor = ''
+	displayColor.textContent = ''
+	displayMessage.textContent = ''
 	var hover = 'Hover'
 
 	//displayColor.innerHTML = ''
@@ -269,12 +284,13 @@ resetButton.addEventListener("click", function(){
 				td[i].style.backgroundColor = "white"
 
 	resetButton.style.visibility = "hidden"
+	table.classList.toggle("lockElements")
 })
 
 // Assigns a random color to the computer and ensures the color is different from the users color
 function setEnemy()
 {
-	enemyColor = enemyColor = colors[Math.floor(Math.random() * colors.length)];
+	enemyColor  = colors[Math.floor(Math.random() * colors.length)];
 
 	if(enemyColor == playerColor)  // Computer and user have same color
 		while(enemyColor == playerColor)

@@ -135,5 +135,10 @@ td{
 	border:none;
 }
 
+.lockElements
+{
+	pointer-events:none;
+}
+
 
 
